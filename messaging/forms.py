@@ -11,3 +11,6 @@ class ReplyForm(forms.ModelForm):
     class Meta:
         model = CustomerMessage
         fields = ['agent_reply']
+
+class ImportFileForm(forms.Form):
+    file = forms.FileField()

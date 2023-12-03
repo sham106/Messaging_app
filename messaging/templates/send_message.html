@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message</title>
+</head>
+<body>
+
+  <h2>Send Message</h2>
+
+  <form method="post" action="{% url 'send_message' %}">
+    {% csrf_token %}
+
+    <!-- Display form errors, if any -->
+    {% if form.errors %}
+      <ul style="color: red;">
+        {% for error in form.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- Sender Name -->
+    <label for="{{ form.sender_name.id_for_label }}">Your Name:</label>
+    {{ form.sender_name }}
+    <br>
+
+    <!-- Message Text -->
+    <label for="{{ form.message_text.id_for_label }}">Message:</label>
+    {{ form.message_text }}
+    <br>
+
+    <!-- Submit Button -->
+    <input type="submit" value="Send Message">
+  </form>
+
+</body>
+</html>

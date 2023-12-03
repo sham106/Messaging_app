@@ -14,11 +14,19 @@
   {% if messages %}
     <ul>
       {% for message in messages %}
-        <li>
-          <strong>{{ message.sender_name }}</strong>
-          <p>{{ message.message_text }}</p>
-          <small>Sent at: {{ message.timestamp }}</small>
-        </li>
+      <div>
+        <p>{{ message.sender_name }} - {{ message.timestamp }}</p>
+        <p>{{ message.message_text }}</p>
+        <p>Agent Reply: {{ message.agent_reply }}</p>
+
+        <!-- Reply Form for each message -->
+        <form method="post" action="{% url 'agent_portal' %}">
+            {% csrf_token %}
+            <input type="hidden" name="message_id" value="{{ message.id }}">
+            {{ reply_form.as_p }}
+            <input type="submit" value="Submit Reply">
+        </form>
+    </div>
       {% endfor %}
     </ul>
   {% else %}

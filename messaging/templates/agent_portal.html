@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>Agent Portal</title>
+    <style>
+      .urgent {
+          color: rgb(199, 28, 28);
+          font-weight: bold;
+      }
+  </style>
 </head>
 <body>
     <h1>Welcome, {{ agent.name }}!</h1>
@@ -14,7 +20,7 @@
         <h2>Assigned Messages:</h2>
         <ul>
             {% for message in messages %}
-            <div  class="{% if message.is_urgent %}urgent-message{% endif %}">
+            <div  {% if message.is_urgent %}class="urgent"{% endif %}>
                 <li>
                     <strong>From:</strong> {{ message.sender_name }}<br>
                     <strong>Message:</strong> {{ message.message_text }}<br>

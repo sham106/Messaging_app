@@ -93,6 +93,9 @@ def agent_portal(request, agent_id):
             print(f"Updated agent_reply: {customer_message.agent_reply}")
 
             return render(request, 'success_page.html')
+        # Determine urgency for each message dynamically
+    for message in messages:
+        message.is_urgent = determine_urgency(message.message_text)
 
     return render(request, 'agent_portal.html', {'agent': agent, 'messages': messages, 'reply_form': reply_form})
 

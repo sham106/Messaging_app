@@ -25,18 +25,19 @@ Make sure you have the following installed:
 - search functionality to allow agents to search over incoming messages and / or customers
 
 
-### How to run the application
+### How to set up the application
  1. Clone the reposit 
  ```    git clone https://github.com/sham106/Messaging_app.git```
-2. Navigate to the project directory: cd Messaging_app.git
-3. Install dependencies:pip install -r requirements.txt
+2. Navigate to the project directory: ```cd Messaging_app.git```
+3. Install dependencies: ```pip install -r requirements.txt```
 4. Apply migrations:
-    python manage.py migrate
+    ```python manage.py migrate```
 5. Load initial data (if any):
-  python manage.py loaddata initial_data.json
+  ```python manage.py loaddata initial_data.json```
 6. Running the Application
-7. Start the development server:
-  python manage.py runserver
-  Access the application at http://localhost:8000.
+#### Start the development server
+  ```python manage.py runserver```
+  
+  Access the application at ```http://localhost:8000.```
 
 

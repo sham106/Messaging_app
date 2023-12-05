@@ -27,8 +27,8 @@ Make sure you have the following installed:
 
 ### How to run the application
  1. Clone the reposit 
- ```    git clone https://github.com/your-username/cs-messaging-web-app.git
-2. Navigate to the project directory: cd cs-messaging-web-app
+ ```    git clone https://github.com/sham106/Messaging_app.git```
+2. Navigate to the project directory: cd Messaging_app.git
 3. Install dependencies:pip install -r requirements.txt
 4. Apply migrations:
     python manage.py migrate

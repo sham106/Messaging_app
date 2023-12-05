@@ -15,6 +15,8 @@ class CustomerMessage(models.Model):
     assigned_agent = models.ForeignKey(Agent, null=True, blank=True, on_delete=models.SET_NULL)
 
     user_id = models.CharField(max_length=100,  null=True)
+    is_urgent = models.BooleanField(default=False)
+
 
 
     def __str__(self):

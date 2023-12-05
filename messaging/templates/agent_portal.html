@@ -5,11 +5,16 @@
 </head>
 <body>
     <h1>Welcome, {{ agent.name }}!</h1>
+    <form method="get" action="{% url 'agent_portal' agent_id=agent.id %}">
+      <input type="text" name="q" placeholder="Search messages or customers">
+      <input type="submit" value="Search">
+  </form>
 
     {% if messages %}
         <h2>Assigned Messages:</h2>
         <ul>
             {% for message in messages %}
+            <div  class="{% if message.is_urgent %}urgent-message{% endif %}">
                 <li>
                     <strong>From:</strong> {{ message.sender_name }}<br>
                     <strong>Message:</strong> {{ message.message_text }}<br>
@@ -22,9 +27,10 @@
                         {% csrf_token %}
                         {{ reply_form.agent_reply }}
                         <input type="hidden" name="message_id" value="{{ message.id }}">
-                        <input type="text" name="agent_reply" id="reply">
+                        <!-- <input type="text" name="agent_reply" id="reply"> -->
                         <input type="submit" value="Submit Reply">
                     </form>
+                  </div>
                 </li>
             {% endfor %}
         </ul>

@@ -9,16 +9,21 @@ import csv, chardet
 from django.db import transaction
 import pandas as pd
 from django.db import connection
+from .utils import determine_urgency
+from django.db.models import Q
+
 
 
 @api_view(['POST'])
 def receive_message(request):
-    # Implement logic to handle incoming messages and store in the database
     sender_name = request.data.get('sender_name')
     message_text = request.data.get('message_text')
 
     form = MessageForm({'sender_name': sender_name, 'message_text': message_text})
     if form.is_valid():
+        is_urgent = determine_urgency(message_text)
+        form.instance.is_urgent = is_urgent
+
         form.save()
         return Response({'message': 'Message received and saved successfully'})
     else:
@@ -61,7 +66,16 @@ def send_message(request):
 
 def agent_portal(request, agent_id):
     agent = get_object_or_404(Agent, id=agent_id)
-    messages = CustomerMessage.objects.filter(assigned_agent=agent)
+
+    query = request.GET.get('q')
+    if query:
+        # If a search query is provided, filter messages based on the query
+        messages = CustomerMessage.objects.filter(
+            Q(assigned_agent=agent) &
+            (Q(message_text__icontains=query) | Q(sender_name__icontains=query))
+        ).order_by('-is_urgent', '-timestamp')
+    else:
+        messages = CustomerMessage.objects.filter(assigned_agent=agent).order_by('-is_urgent', '-timestamp')
     reply_form = ReplyForm()
 
     if request.method == 'POST':
@@ -119,14 +133,19 @@ def assign_messages_round_robin(request):
     for i, message in enumerate(messages):
         agent = agents[i % len(agents)]
         message.assigned_agent = agent
+        urgency_keywords = ['loan', 'disbursent']
+        if any(keyword in message.message_text.lower() for keyword in urgency_keywords):
+            message.is_urgent = True
+        else:
+            message.is_urgent = False
         message.save()
     get_agent_ids()
     return HttpResponse("Messages assigned successfully")
 
-def agent_portal(request, agent_id):
-    agent = Agent.objects.get(id=agent_id)
-    messages = CustomerMessage.objects.filter(assigned_agent=agent)
-    return render(request, 'agent_portal.html', {'agent': agent, 'messages': messages})  
+# def agent_portal(request, agent_id):
+#     agent = Agent.objects.get(id=agent_id)
+#     messages = CustomerMessage.objects.filter(assigned_agent=agent)
+#     return render(request, 'agent_portal.html', {'agent': agent, 'messages': messages})  
 
 def agent_reply(request, message_id):
     if request.method == 'POST':
